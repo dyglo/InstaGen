@@ -1,11 +1,19 @@
 
 import { GoogleGenAI, Modality } from "@google/genai";
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable not set");
+// Read the key from Vite's client-safe env var. Prefer VITE_GEMINI_API_KEY but
+// fall back to other values for compatibility during local development.
+const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env?.GEMINI_API_KEY || process.env?.API_KEY || '';
+
+// Don't throw at module initialization in the browser. Instead construct the
+// client lazily so the app can render a graceful error UI if the key is
+// missing. This avoids the uncaught error that caused a blank canvas on
+// deploys when envs weren't wired up.
+if (!API_KEY) {
+  console.warn('No Gemini API key found. Image/video generation will be disabled. Set VITE_GEMINI_API_KEY in your environment.');
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -122,7 +130,7 @@ export const generateVideo = async (prompt: string, aspectRatio: string, onProgr
         throw new Error("Video generation completed, but no video URI was provided.");
     }
 
-    const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+  const response = await fetch(`${downloadLink}${downloadLink.includes('?') ? '&' : '?'}key=${API_KEY}`);
     if (!response.ok) {
         throw new Error(`Failed to download video: ${response.statusText}`);
     }

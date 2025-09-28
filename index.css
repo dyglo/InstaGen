@@ -1,0 +1,4 @@
+/* Minimal stylesheet so index.html can load without 404. Tailwind is loaded via CDN in index.html so
+   this file can be empty or contain small app-level overrides. */
+html,body,#root{height:100%;}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif}
