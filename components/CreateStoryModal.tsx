@@ -92,7 +92,7 @@ export const CreateStoryModal: React.FC<CreateStoryModalProps> = ({ onClose, onC
       <h2 className="font-semibold text-md">
         {stage === 'select' && 'Create Story'}
         {stage === 'generate' && 'Generate with AI'}
-        {stage === 'share' && 'Share Story'}
+        {stage === 'share' && 'Add to story'}
       </h2>
       <button
         onClick={handleHeaderAction}

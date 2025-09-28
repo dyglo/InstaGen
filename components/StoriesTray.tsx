@@ -27,11 +27,15 @@ const StoryCircle: React.FC<StoryCircleProps> = ({ story, onClick }) => {
 };
 
 interface YourStoryCircleProps {
-    userProfile: UserProfile;
+    userProfile: UserProfile | null;
     onClick: () => void;
 }
 
 const YourStoryCircle: React.FC<YourStoryCircleProps> = ({ userProfile, onClick }) => {
+    if (!userProfile) {
+        return null;
+    }
+
     return (
          <div className="flex flex-col items-center space-y-1 flex-shrink-0">
             <button className="w-16 h-16 rounded-full relative" onClick={onClick}>
@@ -51,7 +55,7 @@ const YourStoryCircle: React.FC<YourStoryCircleProps> = ({ userProfile, onClick 
 
 interface StoriesTrayProps {
   stories: UserStory[];
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
   onOpenStoryViewer: (userId: string) => void;
   onOpenCreateStory: () => void;
 }

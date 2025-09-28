@@ -1,4 +1,4 @@
-import type { UserProfile, ReelType, UserStory } from '../types';
+import type { UserProfile, ReelType, UserStory, PostType } from '../types';
 
 export const initialUserProfileData: UserProfile = {
     id: 'user1',
@@ -14,6 +14,59 @@ export const initialUserProfileData: UserProfile = {
 };
 
 export const initialReels: ReelType[] = [];
+
+export const initialPosts: PostType[] = [
+    {
+        id: 'post1',
+        username: 'tafar_m',
+        avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1887&auto=format&fit=crop',
+        imageUrl: 'https://picsum.photos/id/10/1080/1080',
+        caption: 'Beautiful sunset from today\'s adventure! 🌅',
+        likes: 1247,
+        comments: [],
+        isLiked: false,
+    },
+    {
+        id: 'post2',
+        username: 'art_explorer',
+        avatarUrl: 'https://picsum.photos/id/1011/50/50',
+        imageUrl: 'https://picsum.photos/id/20/1080/1080',
+        caption: 'Street art finds in the city center 🎨',
+        likes: 892,
+        comments: [],
+        isLiked: false,
+    },
+    {
+        id: 'post3',
+        username: 'urban_wanderer',
+        avatarUrl: 'https://picsum.photos/id/1025/50/50',
+        imageUrl: 'https://picsum.photos/id/30/1080/1080',
+        caption: 'Coffee and city views ☕️🏙️',
+        likes: 634,
+        comments: [],
+        isLiked: false,
+    },
+    {
+        id: 'post4',
+        username: 'pixel_dreamer',
+        avatarUrl: 'https://picsum.photos/id/1012/50/50',
+        imageUrl: 'https://picsum.photos/id/40/1080/1080',
+        caption: 'AI-generated dreamscape ✨',
+        likes: 2156,
+        comments: [],
+        isLiked: false,
+    },
+    {
+        id: 'post5',
+        username: 'lisa_anderson',
+        avatarUrl: 'https://picsum.photos/id/237/50/50',
+        imageUrl: 'https://picsum.photos/id/50/1080/1080',
+        caption: 'Weekend adventures with my furry friend 🐕‍🦺',
+        likes: 445,
+        comments: [],
+        isLiked: false,
+    },
+];
 
 export const allUsers: UserProfile[] = [
   initialUserProfileData,

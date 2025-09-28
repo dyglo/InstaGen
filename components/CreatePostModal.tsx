@@ -133,13 +133,13 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ userProfile, o
         {stage === 'select' && 'Create new post'}
         {stage === 'edit' && 'Edit image'}
         {stage === 'generate' && 'Generate with AI'}
-        {stage === 'share' && 'Share post'}
+        {stage === 'share' && 'Create post'}
       </h2>
       <button 
         onClick={handleHeaderAction} 
         disabled={isLoading || (stage==='generate' && !prompt)}
         className="text-blue-500 font-semibold text-sm disabled:opacity-50">
-        {stage === 'share' ? 'Share' : stage === 'generate' ? 'Generate' : 'Next'}
+        {stage === 'share' ? 'Post' : stage === 'generate' ? 'Generate' : 'Next'}
       </button>
     </div>
   );

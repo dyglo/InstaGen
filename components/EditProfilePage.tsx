@@ -1,7 +1,8 @@
 
 import React, { useState, useRef } from 'react';
 import type { UserProfile } from '../types';
-import { CloseIcon, CheckIcon } from './icons/Icons';
+import { CloseIcon } from './icons/Icons';
+import { dbService } from '../services/databaseService';
 
 const fileToDataUrl = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -21,11 +22,20 @@ interface EditProfilePageProps {
 export const EditProfilePage: React.FC<EditProfilePageProps> = ({ userProfile, onClose, onSave }) => {
     const [name, setName] = useState(userProfile.name);
     const [bio, setBio] = useState(userProfile.bio);
-    const [avatarUrl, setAvatarUrl] = useState(userProfile.avatarUrl);
+    const [avatarUrl, setAvatarUrl] = useState(userProfile.avatarUrl ?? '');
+    const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleSave = () => {
-        onSave({ name, bio, avatarUrl });
+    const handleSave = async () => {
+        setIsLoading(true);
+        try {
+            await onSave({ name, bio, avatarUrl });
+            onClose();
+        } catch (error) {
+            console.error('Failed to save profile:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
     
     const handleAvatarChangeClick = () => {
@@ -49,7 +59,13 @@ export const EditProfilePage: React.FC<EditProfilePageProps> = ({ userProfile, o
             <header className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
                 <button onClick={onClose}><CloseIcon /></button>
                 <h2 className="font-semibold text-md">Edit Profile</h2>
-                <button onClick={handleSave} className="text-blue-500 font-bold"><CheckIcon /></button>
+                <button
+                    onClick={handleSave}
+                    disabled={isLoading}
+                    className="text-blue-500 font-bold disabled:text-gray-400"
+                >
+                    {isLoading ? 'Saving...' : 'Save'}
+                </button>
             </header>
             
             <main className="flex-grow overflow-y-auto p-4">

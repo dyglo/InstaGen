@@ -7,10 +7,12 @@ interface PostProps {
   post: PostType;
   onLike: (postId: string) => void;
   onOpenComments: (post: PostType) => void;
+  onShare?: (post: PostType) => void;
 }
 
-export const Post: React.FC<PostProps> = ({ post, onLike, onOpenComments }) => {
+export const Post: React.FC<PostProps> = ({ post, onLike, onOpenComments, onShare }) => {
   const handleCommentClick = () => onOpenComments(post);
+  const handleShareClick = () => onShare?.(post);
 
   return (
     <article className="border-b border-gray-200 dark:border-gray-800">
@@ -30,7 +32,7 @@ export const Post: React.FC<PostProps> = ({ post, onLike, onOpenComments }) => {
               {post.isLiked ? <HeartIconFilled /> : <HeartIcon />}
             </button>
             <button onClick={handleCommentClick}><CommentIcon /></button>
-            <button onClick={() => console.log('Send clicked for post', post.id)}><SendIcon /></button>
+            <button onClick={handleShareClick}><SendIcon /></button>
           </div>
           <div>
             <button><BookmarkIcon /></button>

@@ -85,14 +85,14 @@ export const CreateReelModal: React.FC<CreateReelModalProps> = ({ userProfile, o
         <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
             <button onClick={goBack}><ArrowLeftIcon /></button>
             <h2 className="font-semibold text-md">
-                {stage === 'generate' ? 'Create Reel' : 'Share Reel'}
+                {stage === 'generate' ? 'Create Reel' : 'Post Reel'}
             </h2>
             <button
                 onClick={stage === 'generate' ? handleGenerate : handleShare}
                 disabled={isLoading || (stage === 'generate' && !prompt)}
                 className="text-blue-500 font-semibold text-sm disabled:opacity-50"
             >
-                {stage === 'generate' ? 'Generate' : 'Share'}
+                {stage === 'generate' ? 'Generate' : 'Post'}
             </button>
         </div>
     );

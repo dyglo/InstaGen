@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { AddIcon, MenuIcon, GridIcon, ReelsIcon, TaggedIcon, CameraIcon } from './icons/Icons';
 import type { PostType, ReelType, UserProfile, UserStory } from '../types';
+import { DeletePostModal } from './DeletePostModal';
 
 interface ProfileHeaderProps {
     username: string;
@@ -67,22 +68,51 @@ const ReelGridItem: React.FC<{ reel: ReelType }> = ({ reel }) => {
 
 
 interface ProfilePageProps {
-    userProfile: UserProfile;
+    userProfile: UserProfile | null;
     posts: PostType[];
     reels: ReelType[];
     stories: UserStory[];
     onAddPostClick: () => void;
     onOpenSettings: () => void;
     onOpenStoryViewer: (userId: string) => void;
+    onDeletePost: (postId: string) => void;
 }
 
-export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile, posts, reels, stories, onAddPostClick, onOpenSettings, onOpenStoryViewer }) => {
+export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile, posts, reels, stories, onAddPostClick, onOpenSettings, onOpenStoryViewer, onDeletePost }) => {
+    if (!userProfile) {
+        return (
+            <div className="flex flex-col h-full">
+                <div className="p-4 text-center">
+                    <p className="text-gray-500 dark:text-gray-400">Please log in to view your profile.</p>
+                </div>
+            </div>
+        );
+    }
+
     const [isFollowing, setIsFollowing] = useState(false);
     const [isHoveringUnfollow, setIsHoveringUnfollow] = useState(false);
     const [activeTab, setActiveTab] = useState<'posts' | 'reels'>('posts');
+    const [deleteModalPost, setDeleteModalPost] = useState<PostType | null>(null);
 
     const userHasStory = stories.some(s => s.userId === userProfile.id && s.stories.length > 0);
     const ringClass = userHasStory ? 'bg-gradient-to-tr from-yellow-400 to-fuchsia-600' : 'bg-gray-200 dark:bg-gray-700';
+
+    // Filter posts and reels to show only user's own content
+    const userPosts = posts.filter(post => post.username === userProfile.username);
+    const userReels = reels.filter(reel => reel.username === userProfile.username);
+
+    const handleDeleteClick = (post: PostType) => {
+        setDeleteModalPost(post);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setDeleteModalPost(null);
+    };
+
+    const handleConfirmDelete = (postId: string) => {
+        onDeletePost(postId);
+        setDeleteModalPost(null);
+    };
 
     return (
         <div className="flex flex-col h-full">
@@ -103,7 +133,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile, posts, re
                             />
                         </button>
                         <div className="flex-grow flex justify-around ml-4">
-                            <StatItem value={posts.length} label="Posts" />
+                            <StatItem value={userProfile.stats.posts} label="Posts" />
                             <StatItem value={`${(userProfile.stats.followers / 1000).toFixed(0)}K`} label="Followers" />
                             <StatItem value={userProfile.stats.following} label="Following" />
                         </div>
@@ -156,17 +186,35 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile, posts, re
                 {/* Content Grid */}
                 {activeTab === 'posts' && (
                     <div className="grid grid-cols-3 gap-0.5">
-                        {posts.map(post => (
-                            <div key={post.id} className="aspect-square bg-gray-100 dark:bg-gray-800">
+                        {userPosts.map(post => (
+                            <div key={post.id} className="aspect-square bg-gray-100 dark:bg-gray-800 relative group">
                                 <img src={post.imageUrl} alt={post.caption} className="w-full h-full object-cover" />
+                                {/* Three-dot menu button */}
+                                <button
+                                    onClick={() => handleDeleteClick(post)}
+                                    className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    aria-label="Delete post"
+                                    title="Delete post"
+                                >
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                    </svg>
+                                </button>
                             </div>
                         ))}
+                        {userPosts.length === 0 && (
+                            <div className="col-span-3 flex flex-col items-center justify-center text-center p-12 text-gray-500 dark:text-gray-400">
+                                <CameraIcon className="w-16 h-16 mb-4"/>
+                                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">Share Photos</h2>
+                                <p className="mt-1">When you share photos, they'll appear on your profile.</p>
+                            </div>
+                        )}
                     </div>
                 )}
                 {activeTab === 'reels' && (
-                    reels.length > 0 ? (
+                    userReels.length > 0 ? (
                         <div className="grid grid-cols-3 gap-0.5">
-                            {reels.map(reel => (
+                            {userReels.map(reel => (
                                 <ReelGridItem key={reel.id} reel={reel} />
                             ))}
                         </div>
@@ -179,6 +227,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile, posts, re
                     )
                 )}
             </main>
+
+            {/* Delete Post Modal */}
+            <DeletePostModal
+                post={deleteModalPost}
+                onClose={handleCloseDeleteModal}
+                onDelete={handleConfirmDelete}
+            />
         </div>
     );
 };

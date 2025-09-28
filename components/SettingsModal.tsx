@@ -7,6 +7,7 @@ interface SettingsModalProps {
     onEditProfileClick: () => void;
     currentTheme: 'light' | 'dark';
     onThemeChange: (theme: 'light' | 'dark') => void;
+    onLogout?: () => void;
 }
 
 const MenuItem: React.FC<{ icon: React.ReactNode; label: string; onClick?: () => void; disabled?: boolean; isToggle?: boolean; children?: React.ReactNode }> = ({ icon, label, onClick, disabled, isToggle, children }) => {
@@ -30,7 +31,7 @@ const MenuItem: React.FC<{ icon: React.ReactNode; label: string; onClick?: () =>
 };
 
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onEditProfileClick, currentTheme, onThemeChange }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onEditProfileClick, currentTheme, onThemeChange, onLogout }) => {
     
     const handleToggle = () => {
         onThemeChange(currentTheme === 'light' ? 'dark' : 'light');
@@ -58,8 +59,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onEditPro
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-700 py-2">
                     <MenuItem icon={<AccountSwitchIcon />} label="Switch Account" disabled />
-                    <MenuItem icon={<LogOutIcon />} label="Sign Up" disabled />
-                    <MenuItem icon={<LogOutIcon />} label="Log In" disabled />
+                    <MenuItem icon={<LogOutIcon />} label="Log Out" onClick={() => {
+                        if (onLogout) {
+                            onLogout();
+                        } else {
+                            // Handle logout logic here
+                            console.log('Logout clicked');
+                        }
+                        onClose();
+                    }} />
                 </div>
                 <style>{`
                     @keyframes slide-up {

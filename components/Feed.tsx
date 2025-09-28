@@ -6,14 +6,15 @@ import { StoriesTray } from './StoriesTray';
 interface FeedProps {
   posts: PostType[];
   stories: UserStory[];
-  userProfile: UserProfile;
+  userProfile: UserProfile | null;
   onLike: (postId: string) => void;
   onOpenComments: (post: PostType) => void;
   onOpenStoryViewer: (userId: string) => void;
   onOpenCreateStory: () => void;
+  onShare?: (post: PostType) => void;
 }
 
-export const Feed: React.FC<FeedProps> = ({ posts, stories, userProfile, onLike, onOpenComments, onOpenStoryViewer, onOpenCreateStory }) => {
+export const Feed: React.FC<FeedProps> = ({ posts, stories, userProfile, onLike, onOpenComments, onOpenStoryViewer, onOpenCreateStory, onShare }) => {
   return (
     <div>
       <StoriesTray 
@@ -23,7 +24,7 @@ export const Feed: React.FC<FeedProps> = ({ posts, stories, userProfile, onLike,
         onOpenCreateStory={onOpenCreateStory}
       />
       {posts.map(post => (
-        <Post key={post.id} post={post} onLike={onLike} onOpenComments={onOpenComments} />
+        <Post key={post.id} post={post} onLike={onLike} onOpenComments={onOpenComments} onShare={onShare} />
       ))}
     </div>
   );
