@@ -1,0 +1,5 @@
+{
+  "name": "InstaGen",
+  "description": "An Instagram-like clone app where users can generate or edit images for their posts using the Gemini API. Upload a photo and use a text prompt to modify it, or start from a default image and create something new.",
+  "requestFramePermissions": []
+}
